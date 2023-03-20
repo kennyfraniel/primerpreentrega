@@ -9,7 +9,16 @@ import ProductManager from "./controllers/ProductManager.js";
 const app = express ();
 const PORT = 8080
 const product = new ProductManager()
+const mongoose = require("mongoose")
+const dotenv = require ("dotenv")
 
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL)
+.then(()=> console.log("DB connected!"))
+.catch((err) => {
+    console.log(err);
+});
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
