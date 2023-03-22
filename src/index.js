@@ -5,20 +5,22 @@ import { engine } from "express-handlebars";
 import * as path from "path";
 import __dirname from "./utils.js";
 import ProductManager from "./controllers/ProductManager.js";
+import { Server } from "socket.io";
+import mongoose from "mongoose";
+
 
 const app = express ();
-const PORT = 8080
 const product = new ProductManager()
-const mongoose = require("mongoose")
-const dotenv = require ("dotenv")
+const httpServer = app.listen(5000, () => { console.log('escuchando!') })
+const io = new Server(httpServer)
 
-dotenv.config();
+const strCnx = 'mongodb://localhost/proyectocoderhouse'
+await mongoose.connect(strCnx)
 
-mongoose.connect(process.env.MONGO_URL)
-.then(()=> console.log("DB connected!"))
-.catch((err) => {
-    console.log(err);
-});
+io.on('connection', function(socket){
+    socket.emit('mensaje', 'saludos como están')
+})
+
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
@@ -35,7 +37,6 @@ app.get("/", async (req, res) => {
     let allProducts = await product.getProducts()
     res.render("home",{
         title: "Express Avanzado | Handlebars",
-        products: allProducts
     })
 })
 
@@ -44,6 +45,3 @@ app.use("/api/cart", CartRouter)
 
 
 
-app.listen(PORT, () =>{
-    console.log(`Servidor Express Puerto ${PORT}`);
-})
