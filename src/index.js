@@ -7,6 +7,9 @@ import __dirname from "./utils.js";
 import ProductManager from "./controllers/ProductManager.js";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
+import { MONGODB_CNX_STR } from "./config/mongo.js";
+import { configureMessagesSocket } from "./sockets/messages.socket.js";
+
 
 
 const app = express ();
@@ -14,11 +17,11 @@ const product = new ProductManager()
 const httpServer = app.listen(5000, () => { console.log('escuchando!') })
 const io = new Server(httpServer)
 
-const strCnx = 'mongodb://localhost/proyectocoderhouse'
-await mongoose.connect(strCnx)
+
+await mongoose.connect(MONGODB_CNX_STR)
 
 io.on('connection', function(socket){
-    socket.emit('mensaje', 'saludos como están')
+    configureMessagesSocket(io, socket)
 })
 
 
@@ -37,6 +40,7 @@ app.get("/", async (req, res) => {
     let allProducts = await product.getProducts()
     res.render("home",{
         title: "Express Avanzado | Handlebars",
+        allProducts
     })
 })
 
