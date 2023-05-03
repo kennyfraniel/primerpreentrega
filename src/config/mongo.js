@@ -1,0 +1,1 @@
+export const MONGODB_CNX_STR = 'mongodb+srv://kennyfraniel:gridel123@cluster0.8ct2l7d.mongodb.net/proyectocoderhouse?retryWrites=true&w=majority'

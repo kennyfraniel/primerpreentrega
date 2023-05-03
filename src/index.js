@@ -16,7 +16,6 @@ app.use(express.static(__dirname+'/public'))
 app.engine("handlebars", engine())
 app.set("views", path.resolve(__dirname + "/views"))
 app.set("view engine", "handlebars")
-
 app.use("/api/products", ProductRouter)
 app.use("/api/cart", CartRouter)
 
